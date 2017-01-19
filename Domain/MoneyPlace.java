@@ -1,6 +1,6 @@
 package Domain;
 
-import Exceptions.WrongInputTranzaction;
+import Exceptions.WrongInputTransaction;
 import Validator.Validator;
 
 public class MoneyPlace implements SerializableWithId{
@@ -9,29 +9,56 @@ public class MoneyPlace implements SerializableWithId{
     private Double amount;
     private String description;
 
-    private MoneyPlace(Integer id, String name, Double amount, String description) {
+    public MoneyPlace(Integer id, String name, Double amount, String description) {
         this.id = id;
         this.name = name;
         this.amount = amount;
         this.description = description;
     }
 
+    public MoneyPlace(String name, Double amount) {
+        id = -1;
+        description = "";
+        this.name = name;
+        this.amount = amount;
+    }
+
+    public MoneyPlace(String name, Double amount, String description) {
+        this.name = name;
+        this.amount = amount;
+        this.description = description;
+        id = -1;
+    }
+
     public MoneyPlace() {
         this(null,null,null,null);
     }
 
-    public MoneyPlace getMoneyPlace(String id,
+    public static MoneyPlace getMoneyPlace(String id,
                                     String name,
                                     String amount,
                                     String description)
-                                    throws WrongInputTranzaction{
+                                    throws WrongInputTransaction {
         String errors="";
         errors += Validator.validateInt(id, "Id has to be a number!") +
                 Validator.validateAmount(amount, "Amount has to be a real number");
         if (errors.equals("")){
             return new MoneyPlace(Integer.parseInt(id), name, Double.parseDouble(amount), description);
         }
-        throw new WrongInputTranzaction(errors);
+        throw new WrongInputTransaction(errors);
+    }
+
+    public static MoneyPlace getMoneyPlace(int id,
+                                           String name,
+                                           String amount,
+                                           String description)
+            throws WrongInputTransaction {
+        String errors="";
+        errors += Validator.validateAmount(amount, "Amount has to be a real number");
+        if (errors.equals("")){
+            return new MoneyPlace(id, name, Double.parseDouble(amount), description);
+        }
+        throw new WrongInputTransaction(errors);
     }
 
     public Integer getId() {

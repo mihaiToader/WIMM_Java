@@ -1,6 +1,5 @@
 package Repository;
 
-import Domain.HasId;
 import Domain.SerializableWithId;
 
 import java.io.*;
@@ -34,6 +33,8 @@ public class RepositorySerializable<T extends SerializableWithId> extends Reposi
             ex.printStackTrace();
         }
     }
+
+
     public void saveData()
     {
         try

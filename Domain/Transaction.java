@@ -1,10 +1,11 @@
 package Domain;
 
-import Exceptions.WrongInputTranzaction;
+import Exceptions.WrongInputTransaction;
 import Validator.Validator;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class Transaction implements HasId
 {
@@ -13,15 +14,17 @@ public class Transaction implements HasId
     private Double amount;
     private String type;
     private String description;
+    private String name;
     private LocalDateTime date;
 
     public Transaction()
     {
-       this(null,null,null,null,null,null);
+       this(-1,-1,"",0.0,"","",LocalDateTime.of(0,0,0,0,0,0));
     }
 
-    private Transaction(Integer id,
+    public Transaction(Integer id,
                         Integer idMoneyPlace,
+                        String name,
                         Double amount,
                         String type,
                         String description,
@@ -33,10 +36,12 @@ public class Transaction implements HasId
         this.type = type;
         this.description = description;
         this.date = date;
+        this.name = name;
     }
 
     private Transaction(Integer id,
                        Integer idMoneyPlace,
+                       String name,
                        Double amount,
                        String type,
                        String description,
@@ -47,10 +52,10 @@ public class Transaction implements HasId
                        Integer minute,
                        Integer second)
     {
-       this(id,idMoneyPlace,amount,type,description, LocalDateTime.of(LocalDate.of(year,month,day), LocalTime.of(hour,minute,second)));
+       this(id,idMoneyPlace,name,amount,type,description, LocalDateTime.of(LocalDate.of(year,month,day), LocalTime.of(hour,minute,second)));
     }
 
-    private String validateType(String type){
+    private static String validateType(String type){
         if (type.equals("input") || type.equals("output")){
             return "";
         }
@@ -58,9 +63,10 @@ public class Transaction implements HasId
     }
 
 
-    public Transaction getTranzaction(String idString,
+    public static Transaction getTransaction(String idString,
                                       String idMoneyPlaceString,
                                       String amountString,
+                                      String name,
                                       String type,
                                       String description,
                                       String yearString,
@@ -69,7 +75,7 @@ public class Transaction implements HasId
                                       String hourString,
                                       String minuteString,
                                       String secondString)
-                               throws WrongInputTranzaction{
+                               throws WrongInputTransaction {
         String errors = "";
         errors += Validator.validateInt(idString,"Id has to be a number!") +
                 Validator.validateAmount(amountString, "Amount has to be a real number!") +
@@ -79,8 +85,8 @@ public class Transaction implements HasId
                 Validator.validateInt(monthString, "Month has to be a number!") +
                 Validator.validateInt(dayString, "Day has to be a number!") +
                 Validator.validateInt(hourString, "Hour has to be a number!") +
-                Validator.validateInt(minuteString, "Second has to be a number!") +
-                Validator.validateInt(secondString, "Minute has to be a number!");
+                Validator.validateInt(minuteString, "Minute has to be a number!") +
+                Validator.validateInt(secondString, "Second has to be a number!");
 
         if (errors.equals("")){
             Integer year = Integer.parseInt(yearString);
@@ -94,15 +100,42 @@ public class Transaction implements HasId
             if (errors.equals("")){
                 return new Transaction( Integer.parseInt(idString),
                                         Integer.parseInt(idMoneyPlaceString),
+                                        name,
                                         Double.parseDouble(amountString),
                                         type,
                                         description,
                                         year,month,day,hour,minute,second);
             }
         }
-        throw new WrongInputTranzaction(errors);
+        throw new WrongInputTransaction(errors);
     }
 
+    public static Transaction getTransaction(String idString,
+                                      String idMoneyPlaceString,
+                                      String name,
+                                      String amountString,
+                                      String type,
+                                      String description,
+                                      LocalDateTime date)
+            throws WrongInputTransaction {
+        String errors = "";
+        errors += Validator.validateInt(idString,"Id has to be a number!") +
+                Validator.validateAmount(amountString, "Amount has to be a real number!") +
+                Validator.validateInt(idMoneyPlaceString, "Id money place has to be a number!") +
+                validateType(type);
+
+
+        if (errors.equals("")){
+                return new Transaction( Integer.parseInt(idString),
+                        Integer.parseInt(idMoneyPlaceString),
+                        name,
+                        Double.parseDouble(amountString),
+                        type,
+                        description,
+                        date);
+            }
+        throw new WrongInputTransaction(errors);
+    }
 
     public Integer getId() {
         return id;
@@ -153,4 +186,21 @@ public class Transaction implements HasId
     }
 
 
+    public String getDateAsString()
+    {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        return date.format(formatter);
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "id=" + id +
+                ", idMoneyPlace=" + idMoneyPlace +
+                ", amount=" + amount +
+                ", type='" + type + '\'' +
+                ", description='" + description + '\'' +
+                ", date=" + date +
+                '}';
+    }
 }
