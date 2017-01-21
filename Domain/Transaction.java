@@ -7,19 +7,39 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-public class Transaction implements HasId
+public class Transaction implements SerializableWithId
 {
     private Integer id;
     private Integer idMoneyPlace;
     private Double amount;
     private String type;
     private String description;
+
+
     private String name;
     private LocalDateTime date;
 
     public Transaction()
     {
        this(-1,-1,"",0.0,"","",LocalDateTime.of(0,0,0,0,0,0));
+    }
+
+    public Transaction(Integer id,
+                       Integer idMoneyPlace,
+                       String name,
+                       Double amount,
+                       String type,
+                       String description,
+                       LocalDate date,
+                       LocalTime time)
+    {
+        this.id = id;
+        this.idMoneyPlace = idMoneyPlace;
+        this.amount = amount;
+        this.type = type;
+        this.description = description;
+        this.date = LocalDateTime.of(date,time);
+        this.name = name;
     }
 
     public Transaction(Integer id,
@@ -56,10 +76,52 @@ public class Transaction implements HasId
     }
 
     private static String validateType(String type){
-        if (type.equals("input") || type.equals("output")){
+        if (type.equals("income") || type.equals("outcome")){
             return "";
         }
         return "Type has to be input or output";
+    }
+
+    /*time has to be HH:MM:SS.NS or HH:MM:SS or HH:MM */
+    private static LocalTime getLocalTimeFromString(String time){
+        String timeElements[] = time.split(":");
+        if (timeElements.length == 3){
+            if (timeElements[2].split(".").length == 0)
+                return LocalTime.of(Integer.parseInt(timeElements[0]),Integer.parseInt(timeElements[1]),Integer.parseInt(timeElements[2]));
+            else if (timeElements[2].split(".").length == 2)
+                return LocalTime.of(Integer.parseInt(timeElements[0]),Integer.parseInt(timeElements[1]),Integer.parseInt(timeElements[2].split(".")[0]));
+        }else if (timeElements.length == 2){
+            return LocalTime.of(Integer.parseInt(timeElements[0]),Integer.parseInt(timeElements[1]));
+        }
+        return null;
+    }
+
+    public static Transaction getTransaction(Integer id,
+                                             Integer idMoneyPlace,
+                                             String amountString,
+                                             String name,
+                                             String type,
+                                             String description,
+                                             LocalDate date,
+                                             String time) throws WrongInputTransaction {
+        String errors = "";
+        errors += Validator.validateAmount(amountString, "Amount has to be a real number!") +
+                validateType(type) +
+                Validator.validateTime(time);
+
+        if (errors.equals("")){
+            return new Transaction( id,
+                    idMoneyPlace,
+                    name,
+                    Double.parseDouble(amountString),
+                    type,
+                    description,
+                    date,
+                    getLocalTimeFromString(time)
+                    );
+
+        }
+        throw new WrongInputTransaction(errors);
     }
 
 
@@ -137,6 +199,13 @@ public class Transaction implements HasId
         throw new WrongInputTransaction(errors);
     }
 
+    public String getOppositeType(){
+        if (type.equals("income")){
+            return "outcome";
+        }
+        return "income";
+    }
+
     public Integer getId() {
         return id;
     }
@@ -177,12 +246,24 @@ public class Transaction implements HasId
         this.description = description;
     }
 
-    public LocalDateTime getDate() {
-        return date;
+    public LocalDate getDate() {
+        return date.toLocalDate();
+    }
+
+    public LocalTime getTime(){
+        return date.toLocalTime();
     }
 
     public void setDate(LocalDateTime date) {
         this.date = date;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
 

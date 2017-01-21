@@ -41,11 +41,19 @@ public class MoneyPlace implements SerializableWithId{
                                     throws WrongInputTransaction {
         String errors="";
         errors += Validator.validateInt(id, "Id has to be a number!") +
-                Validator.validateAmount(amount, "Amount has to be a real number");
+                Validator.validateAmount(amount, "Amount has to be a real number!") +
+                validateName(name);
         if (errors.equals("")){
             return new MoneyPlace(Integer.parseInt(id), name, Double.parseDouble(amount), description);
         }
         throw new WrongInputTransaction(errors);
+    }
+
+    public static String validateName(String name){
+        if (name.equals("")){
+            return "Name can not be empty!";
+        }
+        return "";
     }
 
     public static MoneyPlace getMoneyPlace(int id,
@@ -54,9 +62,23 @@ public class MoneyPlace implements SerializableWithId{
                                            String description)
             throws WrongInputTransaction {
         String errors="";
-        errors += Validator.validateAmount(amount, "Amount has to be a real number");
+        errors += Validator.validateAmount(amount, "Amount has to be a real number!") +
+                validateName(name);
         if (errors.equals("")){
             return new MoneyPlace(id, name, Double.parseDouble(amount), description);
+        }
+        throw new WrongInputTransaction(errors);
+    }
+
+    public static MoneyPlace getMoneyPlaceWithInvalidId(String name,
+                                           String amount,
+                                           String description)
+            throws WrongInputTransaction {
+        String errors="";
+        errors += Validator.validateAmount(amount, "Amount has to be a real number!") +
+                validateName(name);
+        if (errors.equals("")){
+            return new MoneyPlace(-1, name, Double.parseDouble(amount), description);
         }
         throw new WrongInputTransaction(errors);
     }
@@ -95,11 +117,6 @@ public class MoneyPlace implements SerializableWithId{
 
     @Override
     public String toString() {
-        return "MoneyPlace{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", amount=" + amount +
-                ", description='" + description + '\'' +
-                '}';
+        return name;
     }
 }

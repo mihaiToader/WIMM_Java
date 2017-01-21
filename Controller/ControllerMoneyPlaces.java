@@ -1,7 +1,6 @@
 package Controller;
 
 import Domain.MoneyPlace;
-import Exceptions.WrongInput;
 import Exceptions.WrongInputTransaction;
 import Observer.Observable;
 import Observer.Observer;
@@ -10,7 +9,7 @@ import Repository.Repository;
 import java.util.*;
 
 public class ControllerMoneyPlaces implements Observable {
-    Repository<MoneyPlace> repository;
+    private Repository<MoneyPlace> repository;
 
     public ControllerMoneyPlaces(Repository<MoneyPlace> repository) {
         this.repository = repository;
@@ -22,9 +21,27 @@ public class ControllerMoneyPlaces implements Observable {
 
     private List<Observer> observers = new ArrayList<Observer>();
 
-    public void add(String name, String amount, String description) throws WrongInputTransaction {
-        repository.add(MoneyPlace.getMoneyPlace(repository.getNextId(),name,amount,description));
+    public MoneyPlace add(String name, String amount, String description) throws WrongInputTransaction {
+        MoneyPlace mP = MoneyPlace.getMoneyPlace(repository.getNextId(),name,amount,description);
+        repository.add(mP);
+        return mP;
+    }
+
+    public MoneyPlace add(String name, Double amount, String description){
+        MoneyPlace mP = new MoneyPlace(repository.getNextId(), name,amount,description);
+        repository.add(mP);
         notifyObservers();
+        return mP;
+    }
+
+    public void updateAmount(Integer id, Double amount){
+        MoneyPlace mP = getMoneyPlace(id);
+        mP.setAmount(amount);
+        repository.update(mP);
+    }
+
+    public void update(MoneyPlace mP){
+        repository.update(mP);
     }
 
     public void delete(Integer id){
@@ -33,6 +50,19 @@ public class ControllerMoneyPlaces implements Observable {
             repository.delete(mP);
             notifyObservers();
         }
+    }
+
+    public void delete(MoneyPlace mP){
+        repository.delete(mP);
+    }
+
+    public Boolean doesMoneyPlaceExists(Integer id){
+        for (MoneyPlace mP: getAll()){
+            if (mP.getId().equals(id)){
+                return true;
+            }
+        }
+        return false;
     }
 
     public MoneyPlace getMoneyPlace(Integer id)
@@ -45,6 +75,22 @@ public class ControllerMoneyPlaces implements Observable {
         return null;
     }
 
+    public String getMoneyPlaceName(Integer id){
+        MoneyPlace mP = getMoneyPlace(id);
+        if (null != mP){
+            return mP.getName();
+        }
+        return "";
+    }
+
+    public Boolean thisMoneyPlaceNameExists(String name){
+        for (MoneyPlace mP: getAll()){
+            if (mP.getName().equals(name)){
+                return true;
+            }
+        }
+        return false;
+    }
 
     @Override
     public void addObserver(Observer o) {

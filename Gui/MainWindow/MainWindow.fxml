@@ -14,7 +14,7 @@
         <tabs>
           <Tab text="Transaction">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              <AnchorPane fx:id="anchorPaneTransaction" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
             </content>
           </Tab>
           <Tab text="Money places">
@@ -30,7 +30,7 @@
          <menus>
             <Menu mnemonicParsing="false" text="File">
               <items>
-                  <MenuItem fx:id="menuItemClose" mnemonicParsing="false" onAction="#closeApplication" text="Exit" />
+                  <MenuItem mnemonicParsing="false" onAction="#closeApplication" text="Exit" />
               </items>
             </Menu>
          </menus>

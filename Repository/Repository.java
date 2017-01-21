@@ -25,6 +25,17 @@ public class Repository<T extends HasId> implements RepositoryCRUD<T> {
     }
 
     @Override
+    public void update(T obj) {
+        this.all.replaceAll(e -> {
+            if (e.getId().equals(obj.getId())) {
+                return obj;
+            }
+            return e;
+        });
+        saveData();
+    }
+
+    @Override
     public ArrayList<T> getAll() {
         return all;
     }

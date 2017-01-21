@@ -7,7 +7,7 @@ public class AlertController {
     private boolean ok;
 
     public AlertController() {
-        alert = new Alert(Alert.AlertType.WARNING);
+        alert = new Alert(Alert.AlertType.ERROR);
         ok = true;
     }
 
