@@ -49,7 +49,9 @@ public class RepositorySerializable<T extends SerializableWithId> extends Reposi
         }
     }
 
-
+    public void clearData(){
+        all.clear();
+    }
 
 
 }

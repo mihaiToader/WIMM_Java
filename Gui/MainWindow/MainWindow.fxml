@@ -33,6 +33,11 @@
                   <MenuItem mnemonicParsing="false" onAction="#closeApplication" text="Exit" />
               </items>
             </Menu>
+            <Menu mnemonicParsing="false" text="Transaction">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Save as PDF" />
+              </items>
+            </Menu>
          </menus>
       </MenuBar>
    </top>

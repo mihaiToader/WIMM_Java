@@ -10,10 +10,13 @@ import Gui.MainWindow.MainWindowController;
 import Gui.MoneyPlaces.MoneyPlaceGuiController;
 import Gui.Transactions.TransactionsGuiController;
 import Repository.RepositorySerializable;
+import Utils.CreateDataFiles;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -22,23 +25,52 @@ import java.time.LocalDateTime;
 
 public class StartGui extends Application{
     private ControllerApplication controller;
+    private String fileNameTransactions;
+    private String fileNameMoneyPlaces;
 
     @Override
     public void start(Stage primaryStage) {
-        initializeControllerApplication();
-        Scene scene = new Scene(getMainWindowView(), 700,600);
+        String error = createFilesForStoreDate();
+        if (!error.equals("")){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Fatal Error");
+            alert.setHeaderText("Application can work because:");
+            alert.setContentText(error);
+        }else {
 
-        //scene.getStylesheets().add(getClass().getResource("Theme.css").toExternalForm());
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("WIMM");
-        primaryStage.show();
+            initializeControllerApplication();
+            Scene scene = new Scene(getMainWindowView(), 700, 600);
+
+            //scene.getStylesheets().add(getClass().getResource("Theme.css").toExternalForm());
+            primaryStage.setScene(scene);
+            primaryStage.setTitle("WIMM");
+            primaryStage.show();
+        }
+    }
+
+    private String createFilesForStoreDate(){
+        CreateDataFiles cdf = new CreateDataFiles();
+        try {
+            fileNameMoneyPlaces = cdf.getPathToMoneyPlace();
+        } catch (IOException e) {
+            return "The file to store the money place can't be created!";
+        }
+        try {
+            fileNameTransactions = cdf.getPathToTransactions();
+        } catch (IOException e) {
+            return "The file to store the money place can't be created!";
+        }
+        return "";
     }
 
     private void initializeControllerApplication(){
-        RepositorySerializable<MoneyPlace> repositoryMP = new RepositorySerializable<MoneyPlace>("src/Data/moneyPlace.bin");
+        RepositorySerializable<MoneyPlace> repositoryMP = new RepositorySerializable<MoneyPlace>(fileNameMoneyPlaces);
         ControllerMoneyPlaces controllerMoneyPlaces = new ControllerMoneyPlaces(repositoryMP);
 
-        RepositorySerializable<Transaction> repositoryT = new RepositorySerializable<Transaction>("src/Data/transactions.bin");
+        RepositorySerializable<Transaction> repositoryT = new RepositorySerializable<Transaction>(fileNameTransactions);
+        if (repositoryMP.getAll().size() == 0){
+            repositoryT.clearData();
+        }
         ControllerTransactions controllerTransactions = new ControllerTransactions(repositoryT);
         controller = new ControllerApplication(controllerMoneyPlaces,controllerTransactions);
     }

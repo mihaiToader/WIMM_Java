@@ -16,10 +16,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.util.converter.DateTimeStringConverter;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -96,7 +92,7 @@ public class TransactionsGuiController implements Observer  {
         setPromptTextForTextFields();
         loadTotal();
 
-        labelAmount.setText("0.0 lei");
+        comboBoxFromTopChanged(comboBoxFromTop.getSelectionModel().getSelectedItem());
     }
 
     private void loadTotal(){
