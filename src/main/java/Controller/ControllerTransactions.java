@@ -17,10 +17,12 @@ public class ControllerTransactions implements Observable{
 
     private Repository<Transaction> repository;
     private ArrayList<Observer> observers;
+    private Boolean dataModified;
 
     public ControllerTransactions(Repository<Transaction> repository) {
         observers = new ArrayList<Observer>();
         this.repository = repository;
+        dataModified = false;
     }
 
 
@@ -42,9 +44,15 @@ public class ControllerTransactions implements Observable{
         repository.add(t);
     }
 
+    public void saveData(){
+        repository.saveData();
+    }
+
     public void deleteTransaction(Transaction t){
         repository.delete(t);
     }
+
+    public Boolean getDataModified(){return dataModified;}
 
     @Override
     public void addObserver(Observer o) {

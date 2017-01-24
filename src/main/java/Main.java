@@ -1,4 +1,4 @@
-import Gui.StartGui;
+import GuiControllers.StartGui;
 
 public class Main {
 

@@ -15,13 +15,11 @@ public class Repository<T extends HasId> implements RepositoryCRUD<T> {
     @Override
     public void add(T obj) {
         all.add(obj);
-        saveData();
     }
 
     @Override
     public void delete(T obj) {
         all.remove(obj);
-        saveData();
     }
 
     @Override
@@ -32,7 +30,6 @@ public class Repository<T extends HasId> implements RepositoryCRUD<T> {
             }
             return e;
         });
-        saveData();
     }
 
     @Override

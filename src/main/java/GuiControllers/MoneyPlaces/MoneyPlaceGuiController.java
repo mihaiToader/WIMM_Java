@@ -1,11 +1,10 @@
-package Gui.MoneyPlaces;
+package GuiControllers.MoneyPlaces;
 
 import Controller.ControllerApplication;
-import Controller.ControllerMoneyPlaces;
 import Domain.MoneyPlace;
 import Exceptions.WrongInput;
 import Exceptions.WrongInputTransaction;
-import Gui.AlertGui.AlertController;
+import GuiControllers.AlertGui.AlertController;
 import Observer.Observer;
 import Observer.Observable;
 import Validator.Validator;

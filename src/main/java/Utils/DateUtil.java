@@ -8,9 +8,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-/**
- * Created by Mihai on 07.01.2017.
- */
 public class DateUtil {
 
     private static LocalTime getLocalTime(String time) throws WrongInput {

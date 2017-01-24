@@ -7,12 +7,10 @@ import java.io.IOException;
 public class CreateDataFiles {
     private String pathToTransactions;
     private String pathToMoneyPlace;
-    private String pathToDocuments;
-    private String pathToData;
 
     public CreateDataFiles() {
-        pathToDocuments = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
-        pathToData = pathToDocuments + "\\" + "WIMM";
+        String pathToDocuments = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
+        String pathToData = pathToDocuments + "\\" + "WIMM_build_v_0.2";
         File data = new File(pathToData);
         if (!data.exists()){
             data.mkdir();

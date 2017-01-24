@@ -92,6 +92,10 @@ public class ControllerMoneyPlaces implements Observable {
         return false;
     }
 
+    public void saveData(){
+        repository.saveData();
+    }
+
     @Override
     public void addObserver(Observer o) {
         observers.add(o);

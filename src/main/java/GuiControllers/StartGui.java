@@ -1,4 +1,4 @@
-package Gui;
+package GuiControllers;
 
 
 import Controller.ControllerApplication;
@@ -6,9 +6,9 @@ import Controller.ControllerMoneyPlaces;
 import Controller.ControllerTransactions;
 import Domain.MoneyPlace;
 import Domain.Transaction;
-import Gui.MainWindow.MainWindowController;
-import Gui.MoneyPlaces.MoneyPlaceGuiController;
-import Gui.Transactions.TransactionsGuiController;
+import GuiControllers.MainWindow.MainWindowController;
+import GuiControllers.MoneyPlaces.MoneyPlaceGuiController;
+import GuiControllers.Transactions.TransactionsGuiController;
 import Repository.RepositorySerializable;
 import Utils.CreateDataFiles;
 import javafx.application.Application;
@@ -16,25 +16,26 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 
 
 public class StartGui extends Application{
     private ControllerApplication controller;
     private String fileNameTransactions;
     private String fileNameMoneyPlaces;
+    private Stage primaryStage;
 
     @Override
     public void start(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+
         String error = createFilesForStoreDate();
         if (!error.equals("")){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Fatal Error");
-            alert.setHeaderText("Application can work because:");
+            alert.setHeaderText("Application can't work because:");
             alert.setContentText(error);
         }else {
 
@@ -77,7 +78,7 @@ public class StartGui extends Application{
 
     private Parent getMainWindowView(){
         FXMLLoader loaderMain = new FXMLLoader();
-        loaderMain.setLocation(StartGui.class.getResource("MainWindow/MainWindow.fxml"));
+        loaderMain.setLocation(StartGui.class.getResource("/view/gui/fxml/MainWindow.fxml"));
         Parent parentMain = null;
         try {
             parentMain = loaderMain.load();
@@ -92,12 +93,12 @@ public class StartGui extends Application{
 
     private void setMainWindowController(FXMLLoader loaderMain){
         MainWindowController mainWindowController = loaderMain.getController();
-        mainWindowController.setControllerViews(getMoneyPlaceLayout(), getTransactionLayout());
+        mainWindowController.setMainController(primaryStage, controller,getMoneyPlaceLayout(), getTransactionLayout());
     }
 
     private Parent getMoneyPlaceLayout(){
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(StartGui.class.getResource("MoneyPlaces/MoneyPlacesView.fxml"));
+        loader.setLocation(StartGui.class.getResource("/view/gui/fxml/MoneyPlacesView.fxml"));
         Parent parent = null;
         try {
             parent = loader.load();
@@ -118,7 +119,7 @@ public class StartGui extends Application{
 
     private Parent getTransactionLayout(){
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(StartGui.class.getResource("Transactions/TransactionsView.fxml"));
+        loader.setLocation(StartGui.class.getResource("/view/gui/fxml/TransactionsView.fxml"));
         Parent parent = null;
         try {
             parent = loader.load();

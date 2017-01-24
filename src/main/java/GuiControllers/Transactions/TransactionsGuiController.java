@@ -1,4 +1,4 @@
-package Gui.Transactions;
+package GuiControllers.Transactions;
 
 import Controller.ControllerApplication;
 import Controller.ControllerMoneyPlaces;
@@ -7,7 +7,7 @@ import Domain.MoneyPlace;
 import Domain.Transaction;
 import Exceptions.WrongInput;
 import Exceptions.WrongInputTransaction;
-import Gui.AlertGui.AlertController;
+import GuiControllers.AlertGui.AlertController;
 import Observer.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -177,22 +177,31 @@ public class TransactionsGuiController implements Observer  {
     @FXML
     void add(ActionEvent event) {
         if (comboBoxFrom.getSelectionModel().getSelectedItem() != null){
-            if (datePickerDate.getValue() != null) {
+                LocalDate date;
+                String time;
+                if (datePickerDate.getValue() == null){
+                    date = LocalDate.now();
+                }else{
+                    date = datePickerDate.getValue();
+                }
+                if (textFieldTime.getText().equals("")){
+                    time = LocalTime.now().getHour() + ":" + LocalTime.now().getMinute()+":" + LocalTime.now().getSecond();
+                }else{
+                    time = textFieldTime.getText();
+                }
                 try {
                     Transaction t = controller.addTransaction(comboBoxFrom.getSelectionModel().getSelectedItem().getId(),
                             textFieldAmount.getText(),
                             textFieldName.getText(),
                             comboBoxType.getSelectionModel().getSelectedItem(),
                             textAreaDescription.getText(),
-                            datePickerDate.getValue(),
-                            textFieldTime.getText());
+                            date,
+                            time);
                     table.getSelectionModel().select(t);
                 } catch (WrongInput | WrongInputTransaction wrongInput) {
                     alert.showAlert("Add transaction", "Add can not be done because:", wrongInput.getMessage());
                 }
-            }else{
-                alert.showAlert("Add transaction", "Add can not be done because:","Invalid date!");
-            }
+
         }else{
             alert.showAlert("Add transaction", "Add can not be done because:","There are no money places!");
         }

@@ -1,4 +1,4 @@
-package Gui.TransactionsSmallWindow;
+package GuiControllers.TransactionsSmallWindow;
 
 import javafx.fxml.FXML;
         import javafx.scene.control.ComboBox;
