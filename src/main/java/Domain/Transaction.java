@@ -82,6 +82,13 @@ public class Transaction implements SerializableWithId
         return "Type has to be input or output";
     }
 
+    private static String validateName(String name){
+        if (name.length()> 30){
+            return "Name can't be longer than 30";
+        }
+        return "";
+    }
+
     /*time has to be HH:MM:SS.NS or HH:MM:SS or HH:MM */
     private static LocalTime getLocalTimeFromString(String time){
         String timeElements[] = time.split(":");
@@ -107,7 +114,8 @@ public class Transaction implements SerializableWithId
         String errors = "";
         errors += Validator.validateAmount(amountString, "Amount has to be a real number!") +
                 validateType(type) +
-                Validator.validateTime(time);
+                Validator.validateTime(time)+
+                validateName(name);
 
         if (errors.equals("")){
             return new Transaction( id,
@@ -148,7 +156,8 @@ public class Transaction implements SerializableWithId
                 Validator.validateInt(dayString, "Day has to be a number!") +
                 Validator.validateInt(hourString, "Hour has to be a number!") +
                 Validator.validateInt(minuteString, "Minute has to be a number!") +
-                Validator.validateInt(secondString, "Second has to be a number!");
+                Validator.validateInt(secondString, "Second has to be a number!") +
+                validateName(name);
 
         if (errors.equals("")){
             Integer year = Integer.parseInt(yearString);
@@ -184,7 +193,8 @@ public class Transaction implements SerializableWithId
         errors += Validator.validateInt(idString,"Id has to be a number!") +
                 Validator.validateAmount(amountString, "Amount has to be a real number!") +
                 Validator.validateInt(idMoneyPlaceString, "Id money place has to be a number!") +
-                validateType(type);
+                validateType(type) +
+                validateName(name);
 
 
         if (errors.equals("")){

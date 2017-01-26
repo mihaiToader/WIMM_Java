@@ -16,13 +16,11 @@ public class ControllerApplication {
     private ControllerMoneyPlaces controllerMoneyPlaces;
     private ControllerTransactions controllerTransactions;
     private Double total;
-    private Boolean dataModified;
 
     public ControllerApplication(ControllerMoneyPlaces controllerMoneyPlaces, ControllerTransactions controllerTransactions) {
         this.controllerMoneyPlaces = controllerMoneyPlaces;
         this.controllerTransactions = controllerTransactions;
         calculateTotalFromMoneyPlaces();
-        dataModified = false;
     }
 
     public Transaction addTransaction(Integer idMoneyPlace, String amount, String name, String type, String description, LocalDate date, String time) throws WrongInput, WrongInputTransaction {
@@ -86,6 +84,7 @@ public class ControllerApplication {
     public void updateTransaction(Transaction oldT, Transaction newT){
         deleteTransaction(oldT);
         addTransaction(newT);
+
     }
 
     public void notifyAllObservers(){
@@ -121,7 +120,7 @@ public class ControllerApplication {
         controllerTransactions.saveData();
     }
 
-    public List<Transaction> getAllTransactions(){
+    public ArrayList<Transaction> getAllTransactions(){
         return controllerTransactions.getAll();
     }
 
@@ -150,7 +149,7 @@ public class ControllerApplication {
     }
 
     public Boolean getDataModified() {
-        return dataModified;
+        return controllerMoneyPlaces.getDataModified() || controllerTransactions.getDataModified();
     }
 
 }

@@ -26,7 +26,7 @@ public class ControllerTransactions implements Observable{
     }
 
 
-    public List<Transaction> getAll() {return repository.getAll();}
+    public ArrayList<Transaction> getAll() {return repository.getAll();}
 
     public Transaction add(Integer idMoneyPlace, String amount, String name, String type, String description, LocalDate date, String time) throws WrongInput, WrongInputTransaction {
         Transaction t = Transaction.getTransaction(repository.getNextId(),idMoneyPlace,amount,name,type,description,date,time);
@@ -46,6 +46,15 @@ public class ControllerTransactions implements Observable{
 
     public void saveData(){
         repository.saveData();
+        dataModified = false;
+    }
+
+    public ArrayList<Transaction> getTransactionsBetweenTwoDates(LocalDate first, LocalDate second){
+        ArrayList<Transaction> result = new ArrayList<>();
+        getAll().stream()
+                .filter(x->((x.getDate().isAfter(first) && (x.getDate().isBefore(second))) || x.getDate().equals(first) || x.getDate().equals(second)))
+                .forEach(x -> result.add(x));
+        return result;
     }
 
     public void deleteTransaction(Transaction t){
@@ -61,6 +70,7 @@ public class ControllerTransactions implements Observable{
 
     @Override
     public void notifyObservers() {
+        dataModified = true;
         observers.forEach(x->x.update(this));
     }
 

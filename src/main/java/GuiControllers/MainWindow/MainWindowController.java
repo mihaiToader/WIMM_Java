@@ -1,14 +1,20 @@
 package GuiControllers.MainWindow;
 
 import Controller.ControllerApplication;
+import GuiControllers.DateIntervalForSavingTransactionsToPdf.ControllerSaveTransactionToPdf;
+import GuiControllers.StartGui;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.Optional;
 
 public class MainWindowController {
@@ -33,19 +39,21 @@ public class MainWindowController {
     }
 
     private void saveData(){
-        Alert alert = new Alert(Alert.AlertType.NONE);
+        if (controllerApplication.getDataModified()) {
+            Alert alert = new Alert(Alert.AlertType.NONE);
 
-        alert.setTitle("Closing");
-        alert.setHeaderText("Thanks for using wimm");
-        alert.setContentText("Do you want to save?");
+            alert.setTitle("Closing");
+            alert.setHeaderText("Thanks for using wimm");
+            alert.setContentText("Do you want to save?");
 
-        ButtonType buttonYes = new ButtonType("Yes");
-        ButtonType buttonNo = new ButtonType("No");
+            ButtonType buttonYes = new ButtonType("Yes");
+            ButtonType buttonNo = new ButtonType("No");
 
-        alert.getButtonTypes().addAll(buttonYes,buttonNo);
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == buttonYes) {
-            controllerApplication.saveData();
+            alert.getButtonTypes().addAll(buttonYes, buttonNo);
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == buttonYes) {
+                controllerApplication.saveData();
+            }
         }
     }
 
@@ -64,6 +72,36 @@ public class MainWindowController {
         AnchorPane.setBottomAnchor(moneyPlacesView, 0.0);
         AnchorPane.setLeftAnchor(moneyPlacesView, 0.0);
         AnchorPane.setRightAnchor(moneyPlacesView, 0.0);
+    }
+
+    @FXML
+    private void saveAction(ActionEvent event) {
+        if (controllerApplication.getDataModified()) {
+                controllerApplication.saveData();
+        }
+    }
+
+    @FXML
+    private void saveTransactionsAsPdf(ActionEvent event) {
+        Stage stageSavePdf = new Stage();
+        Scene scene = new Scene(loadExportToPdfView(stageSavePdf));
+        stageSavePdf.setScene(scene);
+        stageSavePdf.setResizable(false);
+        stageSavePdf.show();
+    }
+
+    private Parent loadExportToPdfView(Stage stage){
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(StartGui.class.getResource("/view/gui/fxml/DateInterval.fxml"));
+        Parent parent = null;
+        try {
+            parent = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ControllerSaveTransactionToPdf controller = loader.getController();
+        controller.setController(stage,controllerApplication);
+        return parent;
     }
 
     @FXML

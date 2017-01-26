@@ -86,8 +86,6 @@ public class StartGui extends Application{
             e.printStackTrace();
         }
         setMainWindowController(loaderMain);
-
-
         return parentMain;
     }
 

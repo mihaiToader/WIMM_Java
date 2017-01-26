@@ -10,9 +10,11 @@ import java.util.*;
 
 public class ControllerMoneyPlaces implements Observable {
     private Repository<MoneyPlace> repository;
+    private Boolean dataModified;
 
     public ControllerMoneyPlaces(Repository<MoneyPlace> repository) {
         this.repository = repository;
+        dataModified = false;
     }
 
     public List<MoneyPlace> getAll() {
@@ -94,6 +96,11 @@ public class ControllerMoneyPlaces implements Observable {
 
     public void saveData(){
         repository.saveData();
+        dataModified = false;
+    }
+
+    public Boolean getDataModified() {
+        return dataModified;
     }
 
     @Override
@@ -103,6 +110,8 @@ public class ControllerMoneyPlaces implements Observable {
 
     @Override
     public void notifyObservers() {
+
+        dataModified = true;
         observers.forEach(o->o.update(this));
     }
 
