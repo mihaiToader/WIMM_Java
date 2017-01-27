@@ -10,7 +10,7 @@ public class CreateDataFiles {
 
     public CreateDataFiles() {
         String pathToDocuments = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
-        String pathToData = pathToDocuments + "\\" + "WIMM_build_v_0.2";
+        String pathToData = pathToDocuments + "\\" + "WIMM";
         File data = new File(pathToData);
         if (!data.exists()){
             data.mkdir();

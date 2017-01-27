@@ -1,4 +1,4 @@
-package GuiControllers.DateIntervalForSavingTransactionsToPdf;
+package GuiControllers.TransactionsToPdf;
 
 import Controller.ControllerApplication;
 import Domain.Transaction;
@@ -15,13 +15,10 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 
-public class ControllerSaveTransactionToPdf {
+public class ControllerTransactionToPdf {
 
     @FXML
     private DatePicker datePickerFrom;
@@ -41,18 +38,18 @@ public class ControllerSaveTransactionToPdf {
 
     private Stage primaryStage;
 
-    private ExportTransactionsToPdf export;
+    private ExportTransactionsToPdf exportPdf;
 
     public void setController(Stage primaryStage, ControllerApplication controller){
         this.controller = controller;
 
         this.primaryStage = primaryStage;
-        fileChooser = new FileChooser();
-        export = new ExportTransactionsToPdf(controller);
 
+        exportPdf = new ExportTransactionsToPdf(controller);
+
+        fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extFilter =
                 new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf");
-
         fileChooser.getExtensionFilters().add(extFilter);
     }
 
@@ -91,7 +88,7 @@ public class ControllerSaveTransactionToPdf {
         String path = getPath();
         if (!path.equals("")){
             try {
-                export.createPdf(path, transactions,message,checkBoxWithMoneyPlaces.isSelected(),checkBoxWithTotal.isSelected());
+                exportPdf.createPdf(path, transactions,message,checkBoxWithMoneyPlaces.isSelected(),checkBoxWithTotal.isSelected());
                 openFile(path);
             } catch (IOException e) {
                 showError(e.getMessage());

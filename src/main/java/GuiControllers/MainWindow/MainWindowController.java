@@ -1,8 +1,9 @@
 package GuiControllers.MainWindow;
 
 import Controller.ControllerApplication;
-import GuiControllers.DateIntervalForSavingTransactionsToPdf.ControllerSaveTransactionToPdf;
+import GuiControllers.TransactionsToPdf.ControllerTransactionToPdf;
 import GuiControllers.StartGui;
+import Utils.WriteToLog;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,7 +15,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.util.Optional;
 
 public class MainWindowController {
@@ -87,20 +87,21 @@ public class MainWindowController {
         Scene scene = new Scene(loadExportToPdfView(stageSavePdf));
         stageSavePdf.setScene(scene);
         stageSavePdf.setResizable(false);
+        stageSavePdf.setTitle("Save transactions to pdf");
         stageSavePdf.show();
     }
 
     private Parent loadExportToPdfView(Stage stage){
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(StartGui.class.getResource("/view/gui/fxml/DateInterval.fxml"));
+        loader.setLocation(StartGui.class.getResource("/view/gui/fxml/TransactionToPdfView.fxml"));
         Parent parent = null;
         try {
             parent = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            WriteToLog.writeLog(e.getMessage());
         }
-        ControllerSaveTransactionToPdf controller = loader.getController();
-        controller.setController(stage,controllerApplication);
+        ControllerTransactionToPdf controller = loader.getController();
+        controller.setController(stage, controllerApplication);
         return parent;
     }
 
