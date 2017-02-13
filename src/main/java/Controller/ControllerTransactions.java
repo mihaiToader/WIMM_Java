@@ -17,7 +17,7 @@ public class ControllerTransactions implements Observable{
 
     private Repository<Transaction> repository;
     private ArrayList<Observer> observers;
-    private Boolean dataModified;
+    Boolean dataModified;
 
     public ControllerTransactions(Repository<Transaction> repository) {
         observers = new ArrayList<Observer>();

@@ -3,6 +3,7 @@ package GuiControllers;
 
 import Controller.ControllerApplication;
 import Controller.ControllerMoneyPlaces;
+import Controller.ControllerTransactionsSpecial;
 import Controller.ControllerTransactions;
 import Domain.MoneyPlace;
 import Domain.Transaction;
@@ -10,6 +11,7 @@ import GuiControllers.MainWindow.MainWindowController;
 import GuiControllers.MoneyPlaces.MoneyPlaceGuiController;
 import GuiControllers.Transactions.TransactionsGuiController;
 import Repository.RepositorySerializable;
+import Repository.RepositoryTwoRepositoriesSameFile;
 import Utils.CreateDataFiles;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -23,15 +25,18 @@ import java.io.IOException;
 
 public class StartGui extends Application{
     private ControllerApplication controller;
+    private RepositoryTwoRepositoriesSameFile<Transaction, MoneyPlace> repository;
     private String fileNameTransactions;
     private String fileNameMoneyPlaces;
+    private String fileDataStore;
     private Stage primaryStage;
 
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
 
-        String error = createFilesForStoreDate();
+        //String error = createFilesForStoreData();
+        String error = createFileForStoreData();
         if (!error.equals("")){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Fatal Error");
@@ -39,7 +44,8 @@ public class StartGui extends Application{
             alert.setContentText(error);
         }else {
 
-            initializeControllerApplication();
+            //initializeControllerApplication();
+            initializeControllerApplicationSpecial();
             Scene scene = new Scene(getMainWindowView(), 700, 600);
 
             //scene.getStylesheets().add(getClass().getResource("Theme.css").toExternalForm());
@@ -49,7 +55,17 @@ public class StartGui extends Application{
         }
     }
 
-    private String createFilesForStoreDate(){
+    private String createFileForStoreData(){
+        CreateDataFiles cdf = new CreateDataFiles();
+        try {
+            fileDataStore = cdf.getPathToDataStore();
+        } catch (IOException e) {
+            return "The file to store data can't be created!";
+        }
+        return "";
+    }
+
+    private String createFilesForStoreData(){
         CreateDataFiles cdf = new CreateDataFiles();
         try {
             fileNameMoneyPlaces = cdf.getPathToMoneyPlace();
@@ -73,6 +89,13 @@ public class StartGui extends Application{
             repositoryT.clearData();
         }
         ControllerTransactions controllerTransactions = new ControllerTransactions(repositoryT);
+        controller = new ControllerApplication(controllerMoneyPlaces,controllerTransactions);
+    }
+
+    private void initializeControllerApplicationSpecial(){
+        repository = new RepositoryTwoRepositoriesSameFile<Transaction,MoneyPlace>(fileDataStore);
+        ControllerMoneyPlaces controllerMoneyPlaces = new ControllerMoneyPlaces(repository.getRepositoryD());
+        ControllerTransactionsSpecial controllerTransactions = new ControllerTransactionsSpecial(repository);
         controller = new ControllerApplication(controllerMoneyPlaces,controllerTransactions);
     }
 
@@ -110,7 +133,6 @@ public class StartGui extends Application{
     private void setControllerMoneyPlace(FXMLLoader loader){
         MoneyPlaceGuiController moneyPlaceGuiController = loader.getController();
         moneyPlaceGuiController.setControllerView();
-
 
         moneyPlaceGuiController.setController(controller);
     }

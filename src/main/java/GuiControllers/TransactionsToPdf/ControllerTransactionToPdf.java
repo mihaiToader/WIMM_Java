@@ -99,6 +99,7 @@ public class ControllerTransactionToPdf {
     @FXML
     private void saveAll(ActionEvent event) {
         exportTransactions(controller.getAllTransactions(), "All Transactions:\n");
+        closeWindow();
     }
 
     @FXML

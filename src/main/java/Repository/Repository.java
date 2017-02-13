@@ -51,6 +51,24 @@ public class Repository<T extends HasId> implements RepositoryCRUD<T> {
         return this.getLastId() == null ? 0 : this.getLastId() + 1;
     }
 
+    public Boolean exists(T obj){
+        return all.contains(obj);
+    }
+
+    public Boolean existsId(Integer id){
+        for (T obj: all){
+            if (obj.getId().equals(id)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    public void setAll(ArrayList<T> list) {
+        all = list;
+    }
+
     @Override
     public void loadData() {
         //nothing

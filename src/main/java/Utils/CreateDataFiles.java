@@ -7,10 +7,16 @@ import java.io.IOException;
 public class CreateDataFiles {
     private String pathToTransactions;
     private String pathToMoneyPlace;
+    private String pathToData;
+    private Boolean hmmmmm = true;
 
     public CreateDataFiles() {
         String pathToDocuments = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
-        String pathToData = pathToDocuments + "\\" + "WIMM";
+        if (hmmmmm){
+            pathToData = pathToDocuments + "\\" + "WIMM_develop";
+        }else{
+            pathToData = pathToDocuments + "\\" + "WIMM";
+        }
         File data = new File(pathToData);
         if (!data.exists()){
             data.mkdir();
@@ -33,6 +39,15 @@ public class CreateDataFiles {
             moneyPlaceFile.createNewFile();
         }
         return pathToMoneyPlace;
+    }
+
+    public String getPathToDataStore() throws IOException {
+        String pathToDataStore = pathToData + "\\" + "data.bin";
+        File dataFile = new File(pathToDataStore);
+        if (!dataFile.exists()){
+            dataFile.createNewFile();
+        }
+        return pathToDataStore;
     }
 
 

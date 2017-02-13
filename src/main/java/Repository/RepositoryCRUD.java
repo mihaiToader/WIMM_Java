@@ -9,6 +9,7 @@ public interface RepositoryCRUD<T extends HasId> {
     void delete(T obj);
     void update(T obj);
     ArrayList<T> getAll();
+    Boolean exists(T obj);
     void loadData();
     void saveData();
 }

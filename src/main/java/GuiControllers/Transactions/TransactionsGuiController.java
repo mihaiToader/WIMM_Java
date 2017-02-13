@@ -218,7 +218,9 @@ public class TransactionsGuiController implements Observer  {
         if (null == t){
             alert.showAlert("Delete transaction", "Delete can not be done because:","You didn't selected any transaction from the table!");
         }else{
+            Integer pos = table.getSelectionModel().getSelectedIndex() < 1 ? 0 : table.getSelectionModel().getSelectedIndex() - 1;
             controller.deleteTransaction(t);
+            table.getSelectionModel().select(pos);
         }
     }
 
@@ -250,10 +252,10 @@ public class TransactionsGuiController implements Observer  {
 
     @Override
     public void update(Observable e) {
-        if (e.getClass().equals(ControllerTransactions.class)){
+        if (e instanceof ControllerTransactions){
             loadModel();
             loadTotal();
-        }else if (e.getClass().equals(ControllerMoneyPlaces.class)){
+        }else if (e instanceof ControllerMoneyPlaces){
             loadModelMoneyPlace();
             selectFirstComboBoxes();
         }
